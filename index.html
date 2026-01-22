@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Secure Payment Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .payment-container {
+      background: #020617;
+      padding: 24px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #38bdf8;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #cbd5f5;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #1e293b;
+      background: #020617;
+      color: #e5e7eb;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #38bdf8;
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+    }
+
+    small.error {
+      color: #f87171;
+      font-size: 12px;
+      margin-top: 4px;
+      display: block;
+      height: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #38bdf8;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #0ea5e9;
+    }
+
+    .secure-text {
+      text-align: center;
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 10px;
+    }
+
+    .success {
+      text-align: center;
+      color: #4ade80;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="payment-container">
+    <h2>Secure Payment</h2>
+
+    <form id="paymentForm" novalidate>
+      <div class="form-group">
+        <label>Cardholder Name</label>
+        <input type="text" id="name" placeholder="John Doe" />
+        <small class="error"></small>
+      </div>
+
+      <div class="form-group">
+        <label>Card Number</label>
+        <input
+          type="text"
+          id="cardNumber"
+          placeholder="1234 5678 9012 3456"
+          maxlength="19"
+        />
+        <small class="error"></small>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Expiry (MM/YY)</label>
+          <input type="text" id="expiry" placeholder="MM / YY" maxlength="7" />
+          <small class="error"></small>
+        </div>
+
+        <div class="form-group">
+          <label>CVV</label>
+          <input type="password" id="cvv" placeholder="123" maxlength="4" />
+          <small class="error"></small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Billing Address</label>
+        <input type="text" id="address" placeholder="Street Address" />
+        <small class="error"></small>
+      </div>
+
+      <button type="submit">Pay $1,999</button>
+      <p class="secure-text">🔒 PCI-DSS style client validation demo</p>
+      <p id="successMsg" class="success"></p>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("paymentForm");
+    const successMsg = document.getElementById("successMsg");
+
+    const showError = (input, message) => {
+      input.nextElementSibling.textContent = message;
+    };
+
+    const clearErrors = () => {
+      document.querySelectorAll(".error").forEach(e => e.textContent = "");
+      successMsg.textContent = "";
+    };
+
+    const formatCardNumber = (value) => {
+      return value
+        .replace(/\D/g, "")
+        .replace(/(.{4})/g, "$1 ")
+        .trim();
+    };
+
+    document.getElementById("cardNumber").addEventListener("input", e => {
+      e.target.value = formatCardNumber(e.target.value);
+    });
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      clearErrors();
+
+      let valid = true;
+
+      const name = document.getElementById("name");
+      const card = document.getElementById("cardNumber");
+      const expiry = document.getElementById("expiry");
+      const cvv = document.getElementById("cvv");
+      const address = document.getElementById("address");
+
+      if (name.value.trim().length < 3) {
+        showError(name, "Enter valid cardholder name");
+        valid = false;
+      }
+
+      if (card.value.replace(/\s/g, "").length < 16) {
+        showError(card, "Invalid card number");
+        valid = false;
+      }
+
+      if (!/^\d{2}\s?\/\s?\d{2}$/.test(expiry.value)) {
+        showError(expiry, "Invalid expiry format");
+        valid = false;
+      }
+
+      if (cvv.value.length < 3) {
+        showError(cvv, "Invalid CVV");
+        valid = false;
+      }
+
+      if (address.value.trim().length < 5) {
+        showError(address, "Invalid address");
+        valid = false;
+      }
+
+      if (valid) {
+        successMsg.textContent = "✅ Payment submitted successfully (demo)";
+        form.reset();
+      }
+    });
+  </script>
+
+</body>
+</html>
