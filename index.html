@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Secure Payment Demo</title>
+  <title>SuperAgentX – Secure Payment Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- GitHub Icon -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
 
   <style>
     * {
@@ -12,28 +18,48 @@
     }
 
     body {
-      background: #0f172a;
-      color: #e5e7eb;
+      background: #e5e7eb; /* light grey */
+      margin: 0;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      margin: 0;
     }
 
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 12px 20px;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #d1d5db;
+      z-index: 100;
+    }
+
+    header img {
+      height: 36px;
+    }
+
+    /* Payment Card */
     .payment-container {
       background: #020617;
+      color: #e5e7eb;
       padding: 24px;
       border-radius: 12px;
       width: 100%;
       max-width: 420px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      margin-top: 80px;
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 20px;
       color: #38bdf8;
+      margin-bottom: 20px;
     }
 
     .form-group {
@@ -41,9 +67,9 @@
     }
 
     label {
-      display: block;
       font-size: 14px;
       margin-bottom: 6px;
+      display: block;
       color: #cbd5f5;
     }
 
@@ -54,11 +80,11 @@
       border: 1px solid #1e293b;
       background: #020617;
       color: #e5e7eb;
-      outline: none;
     }
 
     input:focus {
       border-color: #38bdf8;
+      outline: none;
     }
 
     .row {
@@ -69,9 +95,9 @@
     small.error {
       color: #f87171;
       font-size: 12px;
-      margin-top: 4px;
       display: block;
       height: 14px;
+      margin-top: 4px;
     }
 
     button {
@@ -83,7 +109,6 @@
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      margin-top: 10px;
     }
 
     button:hover {
@@ -100,13 +125,40 @@
     .success {
       text-align: center;
       color: #4ade80;
-      margin-top: 12px;
+      margin-top: 10px;
+    }
+
+    /* GitHub Footer */
+    .github-link {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: #020617;
+      color: #e5e7eb;
+      padding: 10px 14px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    .github-link:hover {
+      background: #020617;
+      color: #38bdf8;
     }
   </style>
 </head>
 
 <body>
 
+  <!-- Header -->
+  <header>
+    <img src="fulllogo_transparent_nobuffer.png" alt="SuperAgentX Logo" />
+  </header>
+
+  <!-- Payment Form -->
   <div class="payment-container">
     <h2>Secure Payment</h2>
 
@@ -119,12 +171,7 @@
 
       <div class="form-group">
         <label>Card Number</label>
-        <input
-          type="text"
-          id="cardNumber"
-          placeholder="1234 5678 9012 3456"
-          maxlength="19"
-        />
+        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" />
         <small class="error"></small>
       </div>
 
@@ -154,6 +201,17 @@
     </form>
   </div>
 
+  <!-- GitHub Link -->
+  <a
+    class="github-link"
+    href="https://github.com/superagentxai/superagentx"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <i class="fa-brands fa-github"></i>
+    SuperAgentX
+  </a>
+
   <script>
     const form = document.getElementById("paymentForm");
     const successMsg = document.getElementById("successMsg");
@@ -167,12 +225,8 @@
       successMsg.textContent = "";
     };
 
-    const formatCardNumber = (value) => {
-      return value
-        .replace(/\D/g, "")
-        .replace(/(.{4})/g, "$1 ")
-        .trim();
-    };
+    const formatCardNumber = value =>
+      value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
 
     document.getElementById("cardNumber").addEventListener("input", e => {
       e.target.value = formatCardNumber(e.target.value);
@@ -184,19 +238,13 @@
 
       let valid = true;
 
-      const name = document.getElementById("name");
-      const card = document.getElementById("cardNumber");
-      const expiry = document.getElementById("expiry");
-      const cvv = document.getElementById("cvv");
-      const address = document.getElementById("address");
-
       if (name.value.trim().length < 3) {
         showError(name, "Enter valid cardholder name");
         valid = false;
       }
 
-      if (card.value.replace(/\s/g, "").length < 16) {
-        showError(card, "Invalid card number");
+      if (cardNumber.value.replace(/\s/g, "").length < 16) {
+        showError(cardNumber, "Invalid card number");
         valid = false;
       }
 
