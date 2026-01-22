@@ -1,4 +1,4 @@
-# 💳 SuperAgentX Payment Demo
+# 💳 SuperAgentX Browser Agent Payment - Human Approval Demo
 
 This repository hosts a **demo-only payment form** used for testing
 **browser automation and agentic workflows** with **SuperAgentX**.
