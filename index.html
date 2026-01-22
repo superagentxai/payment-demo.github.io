@@ -225,8 +225,12 @@
       successMsg.textContent = "";
     };
 
-    const formatCardNumber = value =>
-      value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
+    const formatCardNumber = (value) => {
+      return value
+        .replace(/\D/g, "")
+        .replace(/(.{4})/g, "$1 ")
+        .trim();
+    };
 
     document.getElementById("cardNumber").addEventListener("input", e => {
       e.target.value = formatCardNumber(e.target.value);
@@ -238,13 +242,19 @@
 
       let valid = true;
 
+      const name = document.getElementById("name");
+      const card = document.getElementById("cardNumber");
+      const expiry = document.getElementById("expiry");
+      const cvv = document.getElementById("cvv");
+      const address = document.getElementById("address");
+
       if (name.value.trim().length < 3) {
         showError(name, "Enter valid cardholder name");
         valid = false;
       }
 
-      if (cardNumber.value.replace(/\s/g, "").length < 16) {
-        showError(cardNumber, "Invalid card number");
+      if (card.value.replace(/\s/g, "").length < 16) {
+        showError(card, "Invalid card number");
         valid = false;
       }
 
