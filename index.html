@@ -18,7 +18,7 @@
     }
 
     body {
-      background: #e5e7eb; /* light grey */
+      background: #e5e7eb;
       margin: 0;
       min-height: 100vh;
       display: flex;
@@ -44,7 +44,22 @@
       height: 36px;
     }
 
-    /* Payment Card */
+    /* Disclaimer */
+    .disclaimer-banner {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      background: #fff7ed;
+      color: #9a3412;
+      text-align: center;
+      padding: 8px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid #fed7aa;
+      z-index: 99;
+    }
+
+    /* Card */
     .payment-container {
       background: #020617;
       color: #e5e7eb;
@@ -53,7 +68,7 @@
       width: 100%;
       max-width: 420px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-      margin-top: 80px;
+      margin-top: 140px;
     }
 
     h2 {
@@ -128,7 +143,7 @@
       margin-top: 10px;
     }
 
-    /* GitHub Footer */
+    /* GitHub Link */
     .github-link {
       position: fixed;
       bottom: 16px;
@@ -145,7 +160,6 @@
     }
 
     .github-link:hover {
-      background: #020617;
       color: #38bdf8;
     }
   </style>
@@ -153,12 +167,15 @@
 
 <body>
 
-  <!-- Header -->
   <header>
     <img src="fulllogo_transparent_nobuffer.png" alt="SuperAgentX Logo" />
   </header>
 
-  <!-- Payment Form -->
+  <div class="disclaimer-banner">
+    ⚠️ Demo site only. No payment information is collected, stored, or transmitted.
+    Please use <strong>dummy card details</strong> only.
+  </div>
+
   <div class="payment-container">
     <h2>Secure Payment</h2>
 
@@ -171,7 +188,7 @@
 
       <div class="form-group">
         <label>Card Number</label>
-        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" />
+        <input type="text" id="cardNumber" placeholder="4111 1111 1111 1111" maxlength="19" />
         <small class="error"></small>
       </div>
 
@@ -196,12 +213,16 @@
       </div>
 
       <button type="submit">Pay $1,999</button>
-      <p class="secure-text">🔒 PCI-DSS style client validation demo</p>
+
+      <p class="secure-text">
+        ⚠️ Demo only. No real payments are processed or stored.<br />
+        Use <strong>dummy card details</strong>.
+      </p>
+
       <p id="successMsg" class="success"></p>
     </form>
   </div>
 
-  <!-- GitHub Link -->
   <a
     class="github-link"
     href="https://github.com/superagentxai/superagentx"
@@ -225,12 +246,8 @@
       successMsg.textContent = "";
     };
 
-    const formatCardNumber = (value) => {
-      return value
-        .replace(/\D/g, "")
-        .replace(/(.{4})/g, "$1 ")
-        .trim();
-    };
+    const formatCardNumber = value =>
+      value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
 
     document.getElementById("cardNumber").addEventListener("input", e => {
       e.target.value = formatCardNumber(e.target.value);
@@ -242,39 +259,39 @@
 
       let valid = true;
 
-      const name = document.getElementById("name");
-      const card = document.getElementById("cardNumber");
-      const expiry = document.getElementById("expiry");
-      const cvv = document.getElementById("cvv");
-      const address = document.getElementById("address");
+      const nameInput = document.getElementById("name");
+      const cardInput = document.getElementById("cardNumber");
+      const expiryInput = document.getElementById("expiry");
+      const cvvInput = document.getElementById("cvv");
+      const addressInput = document.getElementById("address");
 
-      if (name.value.trim().length < 3) {
-        showError(name, "Enter valid cardholder name");
+      if (nameInput.value.trim().length < 3) {
+        showError(nameInput, "Enter valid cardholder name");
         valid = false;
       }
 
-      if (card.value.replace(/\s/g, "").length < 16) {
-        showError(card, "Invalid card number");
+      if (cardInput.value.replace(/\s/g, "").length < 16) {
+        showError(cardInput, "Invalid card number");
         valid = false;
       }
 
-      if (!/^\d{2}\s?\/\s?\d{2}$/.test(expiry.value)) {
-        showError(expiry, "Invalid expiry format");
+      if (!/^\d{2}\s?\/\s?\d{2}$/.test(expiryInput.value)) {
+        showError(expiryInput, "Invalid expiry format");
         valid = false;
       }
 
-      if (cvv.value.length < 3) {
-        showError(cvv, "Invalid CVV");
+      if (cvvInput.value.length < 3) {
+        showError(cvvInput, "Invalid CVV");
         valid = false;
       }
 
-      if (address.value.trim().length < 5) {
-        showError(address, "Invalid address");
+      if (addressInput.value.trim().length < 5) {
+        showError(addressInput, "Invalid address");
         valid = false;
       }
 
       if (valid) {
-        successMsg.textContent = "✅ Payment submitted successfully (demo)";
+        successMsg.textContent = "✅ Payment submitted successfully (demo only)";
         form.reset();
       }
     });
